@@ -1,18 +1,18 @@
+import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import Home from './views/Home';
+import CreatePost from './views/CreatePost';
 import './App.css'
-import Header from './components/Header.jsx'
-import Post from './components/Post.jsx'
 
 function App() {
-
   return (
-    <>
-      <div>
-        <Header showPostButton={true} />
-        <Post />
-      </div>
-      
-    </>
-  )
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/post" element={<CreatePost />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;
