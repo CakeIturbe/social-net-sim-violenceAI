@@ -42,7 +42,8 @@ db.run(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
     caption TEXT,
-    image_url TEXT
+    image_url TEXT,
+    is_approved INTEGER
   )
 `);
 
@@ -52,7 +53,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/posts', (req, res) => {
-  db.all('SELECT * FROM posts WHERE is_approved = 1', [], (err, rows) => {
+  db.all('SELECT * FROM posts WHERE is_approved = 1 ORDER BY id DESC', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
