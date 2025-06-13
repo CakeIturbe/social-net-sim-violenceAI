@@ -37,7 +37,7 @@ function CreatePost() {
       });
       const data = await res.json();
       console.log('Respuesta del servidor:', data);
-      if (!data.detected) {
+      if (!data.is_approved) {
         alert('Violencia detectada en la imagen, no se puede publicar.');
         setUsername('');
         setCaption('');

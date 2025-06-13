@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/posts', (req, res) => {
-  db.all('SELECT * FROM posts', [], (err, rows) => {
+  db.all('SELECT * FROM posts WHERE is_approved = 1', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
@@ -87,18 +87,14 @@ app.post('/posts', upload.single('image'), async (req, res) => {
     const data = await response.json();
     console.log('Resultado YOLO:', data);
 
-    const detected = data["detected"];
+    const is_approved = data["is_approved"];
     
     const query = `INSERT INTO posts (username, caption, image_url, is_approved) VALUES (?, ?, ?, ?)`;
-    db.run(query, [username, caption, image_url, detected], function (err) {
+    db.run(query, [username, caption, image_url, is_approved], function (err) {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: this.lastID, image_url, result: data, detected });
+      res.json({ id: this.lastID, image_url, result: data, is_approved});
     });
 
-    // if (data["detected"]){
-    //     console.log('Violencia detectada por YOLO');
-    //     return res.status(400).json({ error: 'Violencia detectada en la imagen' });
-    // }
   } catch (error) {
     console.error('Error al enviar a Flask:', error);
     res.status(500).json({ error: 'Error al procesar imagen' });

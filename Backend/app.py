@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from ultralytics import YOLO
 import os
+import traceback
 
 app = Flask(__name__)
 CORS(app)
@@ -14,37 +15,40 @@ model = YOLO("runs/fight_detector_local3/weights/best.pt")
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    file = request.files['image']
+    try:
+        file = request.files.get('image')
+        if not file:
+            return jsonify({"error": "No se recibió archivo"}), 400
 
-    filename = file.filename
-    filepath = os.path.join('uploads', filename)
-    filepath = filepath + ".jpg"  # Aseguramos extensión .jpg
+        filename = file.filename
+        filepath = os.path.join(UPLOAD_FOLDER, filename + ".jpg")
+        file.save(filepath)
 
-    file.save(filepath)
+        if not os.path.exists(filepath):
+            print(f"Archivo guardado erroneamente")
+            return jsonify({"error": "Archivo no se guardó correctamente"}), 400
 
-    if not os.path.exists(filepath):
-        return jsonify({"error": "Archivo no se guardó correctamente"}), 400
+        # Ejecutar modelo YOLO
+        results = model(filepath, save=True, project="runs/detect", name="web", exist_ok=True)
+        result = results[0]
 
-    # Ejecutar el modelo YOLO
-    results = model(filepath, save=True, project="runs/detect", name="web", exist_ok=True)
+        # Revisar detecciones
+        num_detections = len(result.boxes)
+        detected_classes = []
+        if num_detections > 0:
+            detected_classes = result.boxes.cls.cpu().numpy().tolist()
 
-    # Obtener el primer resultado
-    result = results[0]
-    
-    # Verificar si se detectaron objetos
-    num_detections = len(result.boxes)
+        return jsonify({
+            "result_path": f"runs/detect/web/{filename}",
+            "is_approved": num_detections < 1, 
+            "num_detections": num_detections,
+            "classes": detected_classes
+        })
 
-    # Obtener etiquetas detectadas (opcional)
-    detected_classes = []
-    if num_detections > 0:
-        detected_classes = result.boxes.cls.cpu().numpy().tolist() 
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
-    return jsonify({
-        "result_path": f"runs/detect/web/{filename}",
-        "detected": num_detections < 0,
-        "num_detections": num_detections,
-        "classes": detected_classes 
-    })
 
 
 @app.route('/runs/detect/web/<filename>')
