@@ -19,11 +19,11 @@ const Post = ({user = "user1", image_url = "https://placehold.co/600x400", capti
 
             <div
             style={{
-                height: "2px",
-                backgroundColor: " rgba(255, 255, 255, 0.29)",
+                height: "0.5px",
+                backgroundColor: " rgba(255, 255, 255, 0.14)",
                 margin: "2rem 0",
                 marginTop: "4rem",
-                boxShadow: "0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5)"
+                // boxShadow: "0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5)"
             }}
             />
 

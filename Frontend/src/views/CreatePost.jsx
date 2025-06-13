@@ -38,16 +38,14 @@ function CreatePost() {
       const data = await res.json();
       console.log('Respuesta del servidor:', data);
       if (!data.is_approved) {
-        alert('Violencia detectada en la imagen, no se puede publicar.');
+        alert('Violence detected in the image, it cannot be published.');
         setUsername('');
         setCaption('');
         setImage(null);
         setImageFile(null);
         return;
       }
-      console.log('Post guardado con ID:', data.id);
-      alert('Post creado exitosamente!');
-      
+      alert('Post created successfully!');      
       setUsername('');
       setCaption('');
       setImage(null);

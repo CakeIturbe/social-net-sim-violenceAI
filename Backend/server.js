@@ -71,10 +71,6 @@ app.post('/posts', upload.single('image'), async (req, res) => {
   const image_url = image.filename;
   const imagePath = path.join(__dirname, 'public/images', image.filename);
 
-    console.log('Imagen guardada en:', imagePath);
-    // Enviar imagen a Flask para YOLO recuperando el 
-  console.log('Enviando imagen a Flask para YOLO:', imagePath);
-
   try {
     const form = new FormData();
     form.append('image', fs.createReadStream(imagePath));
