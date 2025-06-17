@@ -21,7 +21,8 @@ def predict():
             return jsonify({"error": "No se recibió archivo"}), 400
 
         filename = file.filename
-        filepath = os.path.join(UPLOAD_FOLDER, filename + ".jpg")
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        print(filepath)
         file.save(filepath)
 
         if not os.path.exists(filepath):
@@ -35,8 +36,9 @@ def predict():
         # Revisar detecciones
         num_detections = len(result.boxes)
         detected_classes = []
-        if num_detections > 0:
-            detected_classes = result.boxes.cls.cpu().numpy().tolist()
+        if hasattr(result, 'boxes') and result.boxes is not None:
+            if result.boxes.cls is not None and len(result.boxes.cls) > 0:
+                detected_classes = result.boxes.cls.cpu().numpy().tolist()
 
         return jsonify({
             "result_path": f"runs/detect/web/{filename}",
