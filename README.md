@@ -9,10 +9,10 @@ Customizable AI Backend: Easily swap in your own model or retrain with new datas
 Privacy & Ethics Focused: Designed with transparency and responsible AI use in mind.
 
 ## Tech Stack
-Frontend: React, Tailwind CSS
-Backend: Node.js, Express
-AI Model: Python (TensorFlow / PyTorch) served via API
-Storage: Firebase 
+Frontend: React
+Backend: Node.js
+AI Model: Python (TensorFlow / PyTorch)
+Storage: MySQLite 
 
 ## Use Cases
 Education & demos of AI content moderation
@@ -20,4 +20,12 @@ Prototypes for safe-by-design social platforms
 Research on ethics and performance of AI in content filtering
 
 ## Setup
-Clone the repo and follow the instructions in /docs/setup.md to get started locally. NOT READY
+Clone the repo.
+To run project open three Terminals:
+
+BACKEND
+Place yourself in Backend folder, run   pyton app.py
+Place yourself in Backend folder, run   node server.js
+
+FRONTEND
+Place yourself in Frontend folder, run  npm run dev
